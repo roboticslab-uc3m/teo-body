@@ -44,7 +44,7 @@ public:
                          controlMode(VOCAB_CM_POSITION)
     { }
 
-    ~AmorControlboard()
+    ~AmorControlboard() override
     { close(); }
 
     // ------- IPositionControl declarations. Implementation in IPositionControlImpl.cpp -------

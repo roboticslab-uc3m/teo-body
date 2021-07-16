@@ -4,6 +4,8 @@
 
 #include <yarp/os/Log.h>
 
+#include "LogComponent.hpp"
+
 // ------------------- IPositionControl related --------------------------------
 
 bool roboticslab::AmorControlboard::getAxes(int *ax)
@@ -16,7 +18,7 @@ bool roboticslab::AmorControlboard::getAxes(int *ax)
 
 bool roboticslab::AmorControlboard::positionMove(int j, double ref)
 {
-    yTrace("%d %f", j, ref);
+    yCTrace(AMOR, "%d %f", j, ref);
 
     if (!indexWithinRange(j))
     {
@@ -27,7 +29,7 @@ bool roboticslab::AmorControlboard::positionMove(int j, double ref)
 
     if (amor_get_actual_positions(handle, &positions) != AMOR_SUCCESS)
     {
-        yError("amor_get_actual_positions(): %s", amor_error());
+        yCError(AMOR, "amor_get_actual_positions(): %s", amor_error());
         return false;
     }
 
@@ -54,7 +56,7 @@ bool roboticslab::AmorControlboard::positionMove(const double *refs)
 
 bool roboticslab::AmorControlboard::relativeMove(int j, double delta)
 {
-    yTrace("%d %f", j, delta);
+    yCTrace(AMOR, "%d %f", j, delta);
 
     if (!indexWithinRange(j))
     {
@@ -65,7 +67,7 @@ bool roboticslab::AmorControlboard::relativeMove(int j, double delta)
 
     if (amor_get_actual_positions(handle, &positions) != AMOR_SUCCESS)
     {
-        yError("amor_get_actual_positions(): %s", amor_error());
+        yCError(AMOR, "amor_get_actual_positions(): %s", amor_error());
         return false;
     }
 
@@ -104,13 +106,13 @@ bool roboticslab::AmorControlboard::checkMotionDone(int j, bool *flag)
 
 bool roboticslab::AmorControlboard::checkMotionDone(bool *flag)
 {
-    yTrace("");
+    yCTrace(AMOR, "");
 
     amor_movement_status status;
 
     if (amor_get_movement_status(handle, &status) != AMOR_SUCCESS)
     {
-        yError("amor_get_movement_status(): %s", amor_error());
+        yCError(AMOR, "amor_get_movement_status(): %s", amor_error());
         return false;
     }
 
@@ -123,7 +125,7 @@ bool roboticslab::AmorControlboard::checkMotionDone(bool *flag)
 
 bool roboticslab::AmorControlboard::setRefSpeed(int j, double sp)
 {
-    yError("setRefSpeed() not available");
+    yCError(AMOR, "setRefSpeed() not available");
     return false;
 }
 
@@ -131,7 +133,7 @@ bool roboticslab::AmorControlboard::setRefSpeed(int j, double sp)
 
 bool roboticslab::AmorControlboard::setRefSpeeds(const double *spds)
 {
-    yError("setRefSpeeds() not available");
+    yCError(AMOR, "setRefSpeeds() not available");
     return false;
 }
 
@@ -139,7 +141,7 @@ bool roboticslab::AmorControlboard::setRefSpeeds(const double *spds)
 
 bool roboticslab::AmorControlboard::setRefAcceleration(int j, double acc)
 {
-    yError("setRefAcceleration() not available");
+    yCError(AMOR, "setRefAcceleration() not available");
     return false;
 }
 
@@ -147,7 +149,7 @@ bool roboticslab::AmorControlboard::setRefAcceleration(int j, double acc)
 
 bool roboticslab::AmorControlboard::setRefAccelerations(const double *accs)
 {
-    yError("setRefAccelerations() not available");
+    yCError(AMOR, "setRefAccelerations() not available");
     return false;
 }
 
@@ -155,7 +157,7 @@ bool roboticslab::AmorControlboard::setRefAccelerations(const double *accs)
 
 bool roboticslab::AmorControlboard::getRefSpeed(int j, double *ref)
 {
-    yTrace("%d", j);
+    yCTrace(AMOR, "%d", j);
 
     if (!indexWithinRange(j))
     {
@@ -166,7 +168,7 @@ bool roboticslab::AmorControlboard::getRefSpeed(int j, double *ref)
 
     if (amor_get_joint_info(handle, j, &parameters) != AMOR_SUCCESS)
     {
-        yError("amor_get_joint_info(): %s", amor_error());
+        yCError(AMOR, "amor_get_joint_info(): %s", amor_error());
         return false;
     }
 
@@ -179,7 +181,7 @@ bool roboticslab::AmorControlboard::getRefSpeed(int j, double *ref)
 
 bool roboticslab::AmorControlboard::getRefSpeeds(double *spds)
 {
-    yTrace("");
+    yCTrace(AMOR, "");
 
     for (int j = 0; j < AMOR_NUM_JOINTS; j++)
     {
@@ -187,7 +189,7 @@ bool roboticslab::AmorControlboard::getRefSpeeds(double *spds)
 
         if (amor_get_joint_info(handle, j, &parameters) != AMOR_SUCCESS)
         {
-            yError("amor_get_joint_info(): %s", amor_error());
+            yCError(AMOR, "amor_get_joint_info(): %s", amor_error());
             return false;
         }
 
@@ -201,7 +203,7 @@ bool roboticslab::AmorControlboard::getRefSpeeds(double *spds)
 
 bool roboticslab::AmorControlboard::getRefAcceleration(int j, double *acc)
 {
-    yTrace("%d", j);
+    yCTrace(AMOR, "%d", j);
 
     if (!indexWithinRange(j))
     {
@@ -212,7 +214,7 @@ bool roboticslab::AmorControlboard::getRefAcceleration(int j, double *acc)
 
     if (amor_get_joint_info(handle, j, &parameters) != AMOR_SUCCESS)
     {
-        yError("amor_get_joint_info(): %s", amor_error());
+        yCError(AMOR, "amor_get_joint_info(): %s", amor_error());
         return false;
     }
 
@@ -225,7 +227,7 @@ bool roboticslab::AmorControlboard::getRefAcceleration(int j, double *acc)
 
 bool roboticslab::AmorControlboard::getRefAccelerations(double *accs)
 {
-    yTrace("");
+    yCTrace(AMOR, "");
 
     for (int j = 0; j < AMOR_NUM_JOINTS; j++)
     {
@@ -233,7 +235,7 @@ bool roboticslab::AmorControlboard::getRefAccelerations(double *accs)
 
         if (amor_get_joint_info(handle, j, &parameters) != AMOR_SUCCESS)
         {
-            yError("amor_get_joint_info(): %s", amor_error());
+            yCError(AMOR, "amor_get_joint_info(): %s", amor_error());
             return false;
         }
 
@@ -247,7 +249,7 @@ bool roboticslab::AmorControlboard::getRefAccelerations(double *accs)
 
 bool roboticslab::AmorControlboard::stop(int j)
 {
-    yWarning("Selective stop not available, stopping all joints at once (%d)", j);
+    yCWarning(AMOR, "Selective stop not available, stopping all joints at once (%d)", j);
 
     if (!indexWithinRange(j))
     {
@@ -261,7 +263,7 @@ bool roboticslab::AmorControlboard::stop(int j)
 
 bool roboticslab::AmorControlboard::stop()
 {
-    yTrace("");
+    yCTrace(AMOR, "");
     return amor_controlled_stop(handle) == AMOR_SUCCESS;
 }
 
@@ -269,7 +271,7 @@ bool roboticslab::AmorControlboard::stop()
 
 bool roboticslab::AmorControlboard::positionMove(const int n_joint, const int *joints, const double *refs)
 {
-    yTrace("%d", n_joint);
+    yCTrace(AMOR, "%d", n_joint);
 
     if (!batchWithinRange(n_joint))
     {
@@ -280,7 +282,7 @@ bool roboticslab::AmorControlboard::positionMove(const int n_joint, const int *j
 
     if (n_joint < AMOR_NUM_JOINTS && amor_get_actual_positions(handle, &positions) != AMOR_SUCCESS)
     {
-        yError("amor_get_actual_positions(): %s", amor_error());
+        yCError(AMOR, "amor_get_actual_positions(): %s", amor_error());
         return false;
     }
 
@@ -296,7 +298,7 @@ bool roboticslab::AmorControlboard::positionMove(const int n_joint, const int *j
 
 bool roboticslab::AmorControlboard::relativeMove(const int n_joint, const int *joints, const double *deltas)
 {
-    yTrace("%d", n_joint);
+    yCTrace(AMOR, "%d", n_joint);
 
     if (!batchWithinRange(n_joint))
     {
@@ -307,7 +309,7 @@ bool roboticslab::AmorControlboard::relativeMove(const int n_joint, const int *j
 
     if (n_joint < AMOR_NUM_JOINTS && amor_get_actual_positions(handle, &positions) != AMOR_SUCCESS)
     {
-        yError("amor_get_actual_positions(): %s", amor_error());
+        yCError(AMOR, "amor_get_actual_positions(): %s", amor_error());
         return false;
     }
 
@@ -323,7 +325,7 @@ bool roboticslab::AmorControlboard::relativeMove(const int n_joint, const int *j
 
 bool roboticslab::AmorControlboard::checkMotionDone(const int n_joint, const int *joints, bool *flags)
 {
-    yTrace("%d", n_joint);
+    yCTrace(AMOR, "%d", n_joint);
 
     if (!batchWithinRange(n_joint))
     {
@@ -334,7 +336,7 @@ bool roboticslab::AmorControlboard::checkMotionDone(const int n_joint, const int
 
     if (amor_get_movement_status(handle, &status) != AMOR_SUCCESS)
     {
-        yError("amor_get_movement_status(): %s", amor_error());
+        yCError(AMOR, "amor_get_movement_status(): %s", amor_error());
         return false;
     }
 
@@ -352,7 +354,7 @@ bool roboticslab::AmorControlboard::checkMotionDone(const int n_joint, const int
 
 bool roboticslab::AmorControlboard::setRefSpeeds(const int n_joint, const int *joints, const double *spds)
 {
-    yError("setRefSpeeds() not available");
+    yCError(AMOR, "setRefSpeeds() not available");
     return false;
 }
 
@@ -360,7 +362,7 @@ bool roboticslab::AmorControlboard::setRefSpeeds(const int n_joint, const int *j
 
 bool roboticslab::AmorControlboard::setRefAccelerations(const int n_joint, const int *joints, const double *accs)
 {
-    yError("setRefAccelerations() not available");
+    yCError(AMOR, "setRefAccelerations() not available");
     return false;
 }
 
@@ -368,7 +370,7 @@ bool roboticslab::AmorControlboard::setRefAccelerations(const int n_joint, const
 
 bool roboticslab::AmorControlboard::getRefSpeeds(const int n_joint, const int *joints, double *spds)
 {
-    yTrace("%d", n_joint);
+    yCTrace(AMOR, "%d", n_joint);
 
     if (!batchWithinRange(n_joint))
     {
@@ -381,7 +383,7 @@ bool roboticslab::AmorControlboard::getRefSpeeds(const int n_joint, const int *j
 
         if (amor_get_joint_info(handle, joints[j], &parameters) != AMOR_SUCCESS)
         {
-            yError("amor_get_joint_info(): %s", amor_error());
+            yCError(AMOR, "amor_get_joint_info(): %s", amor_error());
             return false;
         }
 
@@ -395,7 +397,7 @@ bool roboticslab::AmorControlboard::getRefSpeeds(const int n_joint, const int *j
 
 bool roboticslab::AmorControlboard::getRefAccelerations(const int n_joint, const int *joints, double *accs)
 {
-    yTrace("%d", n_joint);
+    yCTrace(AMOR, "%d", n_joint);
 
     if (!batchWithinRange(n_joint))
     {
@@ -408,7 +410,7 @@ bool roboticslab::AmorControlboard::getRefAccelerations(const int n_joint, const
 
         if (amor_get_joint_info(handle, joints[j], &parameters) != AMOR_SUCCESS)
         {
-            yError("amor_get_joint_info(): %s", amor_error());
+            yCError(AMOR, "amor_get_joint_info(): %s", amor_error());
             return false;
         }
 
@@ -422,7 +424,7 @@ bool roboticslab::AmorControlboard::getRefAccelerations(const int n_joint, const
 
 bool roboticslab::AmorControlboard::stop(const int n_joint, const int *joints)
 {
-    yWarning("Selective stop not available, stopping all joints at once (%d)", n_joint);
+    yCWarning(AMOR, "Selective stop not available, stopping all joints at once (%d)", n_joint);
 
     if (!batchWithinRange(n_joint))
     {
@@ -436,7 +438,7 @@ bool roboticslab::AmorControlboard::stop(const int n_joint, const int *joints)
 
 bool roboticslab::AmorControlboard::getTargetPosition(const int joint, double *ref)
 {
-    yTrace("%d", joint);
+    yCTrace(AMOR, "%d", joint);
 
     if (!indexWithinRange(joint))
     {
@@ -447,7 +449,7 @@ bool roboticslab::AmorControlboard::getTargetPosition(const int joint, double *r
 
     if (amor_get_req_positions(handle, &positions) != AMOR_SUCCESS)
     {
-        yError("amor_get_req_positions(): %s", amor_error());
+        yCError(AMOR, "amor_get_req_positions(): %s", amor_error());
         return false;
     }
 
@@ -460,13 +462,13 @@ bool roboticslab::AmorControlboard::getTargetPosition(const int joint, double *r
 
 bool roboticslab::AmorControlboard::getTargetPositions(double *refs)
 {
-    yTrace("");
+    yCTrace(AMOR, "");
 
     AMOR_VECTOR7 positions;
 
     if (amor_get_req_positions(handle, &positions) != AMOR_SUCCESS)
     {
-        yError("amor_get_req_positions(): %s", amor_error());
+        yCError(AMOR, "amor_get_req_positions(): %s", amor_error());
         return false;
     }
 
@@ -482,7 +484,7 @@ bool roboticslab::AmorControlboard::getTargetPositions(double *refs)
 
 bool roboticslab::AmorControlboard::getTargetPositions(const int n_joint, const int *joints, double *refs)
 {
-    yTrace("%d", n_joint);
+    yCTrace(AMOR, "%d", n_joint);
 
     if (!batchWithinRange(n_joint))
     {
@@ -493,7 +495,7 @@ bool roboticslab::AmorControlboard::getTargetPositions(const int n_joint, const 
 
     if (amor_get_req_positions(handle, &positions) != AMOR_SUCCESS)
     {
-        yError("amor_get_req_positions(): %s", amor_error());
+        yCError(AMOR, "amor_get_req_positions(): %s", amor_error());
         return false;
     }
 

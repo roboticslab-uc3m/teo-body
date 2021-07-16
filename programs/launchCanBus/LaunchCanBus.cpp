@@ -9,6 +9,7 @@
 #include <yarp/conf/version.h>
 
 #include <yarp/os/Bottle.h>
+#include <yarp/os/LogComponent.h>
 #include <yarp/os/LogStream.h>
 #include <yarp/os/Property.h>
 #include <yarp/os/Value.h>
@@ -21,6 +22,8 @@
 #include <yarp/dev/IWrapper.h>
 #include <yarp/dev/PolyDriver.h>
 
+YARP_LOG_COMPONENT(LCB, "rl.LaunchCanBus")
+
 using namespace roboticslab;
 
 /************************************************************************/
@@ -29,9 +32,9 @@ bool LaunchCanBus::configure(yarp::os::ResourceFinder &rf)
 {
     if (rf.check("help"))
     {
-        yInfo() << "LaunchCanBus options:";
-        yInfo() << "\t--help (this help)\t--from [file.ini]\t--context [path]\t--mode [pos]\t--homePoss";
-        yDebug() << rf.toString();
+        yCInfo(LCB) << "LaunchCanBus options:";
+        yCInfo(LCB) << "\t--help (this help)\t--from [file.ini]\t--context [path]\t--mode [pos]\t--homePoss";
+        yCDebug(LCB) << rf.toString();
         return false;
     }
 
@@ -41,7 +44,7 @@ bool LaunchCanBus::configure(yarp::os::ResourceFinder &rf)
 
     if (configPath.empty() || !robotConfig.fromConfigFile(configPath))
     {
-        yWarning() << "Config file not found or unsufficient permissions:" << configPath;
+        yCWarning(LCB) << "Config file not found or unsufficient permissions:" << configPath;
     }
 
 #if YARP_VERSION_MINOR >= 5
@@ -56,13 +59,13 @@ bool LaunchCanBus::configure(yarp::os::ResourceFinder &rf)
 
     if (devCan.isNull() || devCan.size() == 0)
     {
-        yError() << "Missing or empty \"devCan\" section collection";
+        yCError(LCB) << "Missing or empty \"devCan\" section collection";
         return false;
     }
 
     if (wrapper.isNull() || wrapper.size() == 0)
     {
-        yError() << "Missing or empty \"wrapper\" section collection";
+        yCError(LCB) << "Missing or empty \"wrapper\" section collection";
         return false;
     }
 
@@ -75,7 +78,7 @@ bool LaunchCanBus::configure(yarp::os::ResourceFinder &rf)
 
         if (canDeviceGroup.isNull())
         {
-            yError() << "Missing CAN device group" << canDeviceLabel;
+            yCError(LCB) << "Missing CAN device group" << canDeviceLabel;
             return false;
         }
 
@@ -88,7 +91,7 @@ bool LaunchCanBus::configure(yarp::os::ResourceFinder &rf)
 
         if (!canDevice->open(canDeviceOptions))
         {
-            yError() << "CAN device" << canDeviceLabel << "configuration failure";
+            yCError(LCB) << "CAN device" << canDeviceLabel << "configuration failure";
             return false;
         }
     }
@@ -102,7 +105,7 @@ bool LaunchCanBus::configure(yarp::os::ResourceFinder &rf)
 
         if (wrapperDeviceGroup.isNull())
         {
-            yError() << "Missing wrapper device group" << wrapperDeviceLabel;
+            yCError(LCB) << "Missing wrapper device group" << wrapperDeviceLabel;
             return false;
         }
 
@@ -115,7 +118,7 @@ bool LaunchCanBus::configure(yarp::os::ResourceFinder &rf)
 
         if (!wrapperDevice->open(wrapperDeviceOptions))
         {
-            yError() << "Wrapper device" << wrapperDeviceLabel << "configuration failure";
+            yCError(LCB) << "Wrapper device" << wrapperDeviceLabel << "configuration failure";
             return false;
         }
 
@@ -123,7 +126,7 @@ bool LaunchCanBus::configure(yarp::os::ResourceFinder &rf)
 
         if (!wrapperDevice->view(iMultipleWrapper))
         {
-            yError() << "Unable to view IMultipleWrapper in" << wrapperDeviceLabel;
+            yCError(LCB) << "Unable to view IMultipleWrapper in" << wrapperDeviceLabel;
             return false;
         }
 
@@ -136,7 +139,7 @@ bool LaunchCanBus::configure(yarp::os::ResourceFinder &rf)
         {
             if (robotConfig.toString().empty())
             {
-                yWarning() << "Missing robot config, but calibrator device was requested";
+                yCWarning(LCB) << "Missing robot config, but calibrator device was requested";
                 goto attachToWrapper; // ave Satanas
             }
 
@@ -144,7 +147,7 @@ bool LaunchCanBus::configure(yarp::os::ResourceFinder &rf)
 
             if (calibratorDeviceGroup.isNull())
             {
-                yWarning() << "Missing calibrator device group" << calibratorDeviceLabel;
+                yCWarning(LCB) << "Missing calibrator device group" << calibratorDeviceLabel;
                 goto attachToWrapper; // ave Satanas
             }
 
@@ -159,7 +162,7 @@ bool LaunchCanBus::configure(yarp::os::ResourceFinder &rf)
 
             if (!calibratorDevice->open(calibratorDeviceOptions))
             {
-                yError() << "Calibrator device" << calibratorDeviceLabel << "configuration failure";
+                yCError(LCB) << "Calibrator device" << calibratorDeviceLabel << "configuration failure";
                 return false;
             }
 
@@ -167,7 +170,7 @@ bool LaunchCanBus::configure(yarp::os::ResourceFinder &rf)
 
             if (!calibratorDevice->view(iRemoteCalibrator))
             {
-                yError() << "Unable to view IRemoteCalibrator in calibrator device" << calibratorDeviceLabel;
+                yCError(LCB) << "Unable to view IRemoteCalibrator in calibrator device" << calibratorDeviceLabel;
                 return false;
             }
 
@@ -175,13 +178,13 @@ bool LaunchCanBus::configure(yarp::os::ResourceFinder &rf)
 
             if (!calibratorDevice->view(iWrapper))
             {
-                yError() << "Unable to view IWrapper in calibrator device" << calibratorDeviceLabel;
+                yCError(LCB) << "Unable to view IWrapper in calibrator device" << calibratorDeviceLabel;
                 return false;
             }
 
             if (!iWrapper->attach(wrapperDevice))
             {
-                yError() << "Unable to attach calibrator to wrapper device" << wrapperDeviceLabel;
+                yCError(LCB) << "Unable to attach calibrator to wrapper device" << wrapperDeviceLabel;
                 return false;
             }
 
@@ -191,7 +194,7 @@ bool LaunchCanBus::configure(yarp::os::ResourceFinder &rf)
         attachToWrapper:
         if (!iMultipleWrapper->attachAll(temp))
         {
-            yError() << "Unable to attach wrapper" << wrapperDeviceLabel << "to CAN devices";
+            yCError(LCB) << "Unable to attach wrapper" << wrapperDeviceLabel << "to CAN devices";
             return false;
         }
     }
@@ -209,13 +212,13 @@ bool LaunchCanBus::configure(yarp::os::ResourceFinder &rf)
 
                 if (!iRemoteCalibrator->homingWholePart())
                 {
-                    yWarning() << "Homing procedure failed for calibrator id" << i;
+                    yCWarning(LCB) << "Homing procedure failed for calibrator id" << i;
                 }
             }
         }
         else
         {
-            yWarning() << "Homing procedure requested, but no calibrator devices loaded";
+            yCWarning(LCB) << "Homing procedure requested, but no calibrator devices loaded";
         }
     }
 

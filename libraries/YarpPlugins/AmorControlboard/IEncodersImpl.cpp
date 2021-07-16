@@ -4,11 +4,13 @@
 
 #include <yarp/os/Log.h>
 
+#include "LogComponent.hpp"
+
 // ------------------ IEncoders related -----------------------------------------
 
 bool roboticslab::AmorControlboard::resetEncoder(int j)
 {
-    yError("resetEncoder() not available");
+    yCError(AMOR, "resetEncoder() not available");
     return false;
 }
 
@@ -16,7 +18,7 @@ bool roboticslab::AmorControlboard::resetEncoder(int j)
 
 bool roboticslab::AmorControlboard::resetEncoders()
 {
-    yError("resetEncoders() not available");
+    yCError(AMOR, "resetEncoders() not available");
     return false;
 }
 
@@ -24,7 +26,7 @@ bool roboticslab::AmorControlboard::resetEncoders()
 
 bool roboticslab::AmorControlboard::setEncoder(int j, double val)
 {
-    yError("setEncoder() not available");
+    yCError(AMOR, "setEncoder() not available");
     return false;
 }
 
@@ -32,7 +34,7 @@ bool roboticslab::AmorControlboard::setEncoder(int j, double val)
 
 bool roboticslab::AmorControlboard::setEncoders(const double *vals)
 {
-    yError("setEncoders() not available");
+    yCError(AMOR, "setEncoders() not available");
     return false;
 }
 
@@ -40,7 +42,7 @@ bool roboticslab::AmorControlboard::setEncoders(const double *vals)
 
 bool roboticslab::AmorControlboard::getEncoder(int j, double *v)
 {
-    yTrace("%d", j);
+    yCTrace(AMOR, "%d", j);
 
     if (!indexWithinRange(j))
     {
@@ -51,7 +53,7 @@ bool roboticslab::AmorControlboard::getEncoder(int j, double *v)
 
     if (amor_get_actual_positions(handle, &positions) != AMOR_SUCCESS)
     {
-        yError("amor_get_actual_positions() failed: %s", amor_error());
+        yCError(AMOR, "amor_get_actual_positions() failed: %s", amor_error());
         return false;
     }
 
@@ -64,13 +66,13 @@ bool roboticslab::AmorControlboard::getEncoder(int j, double *v)
 
 bool roboticslab::AmorControlboard::getEncoders(double *encs)
 {
-    yTrace("");
+    yCTrace(AMOR, "");
 
     AMOR_VECTOR7 positions;
 
     if (amor_get_actual_positions(handle, &positions) != AMOR_SUCCESS)
     {
-        yError("amor_get_actual_positions() failed: %s", amor_error());
+        yCError(AMOR, "amor_get_actual_positions() failed: %s", amor_error());
         return false;
     }
 
@@ -86,7 +88,7 @@ bool roboticslab::AmorControlboard::getEncoders(double *encs)
 
 bool roboticslab::AmorControlboard::getEncoderSpeed(int j, double *sp)
 {
-    yTrace("%d", j);
+    yCTrace(AMOR, "%d", j);
 
     if (!indexWithinRange(j))
     {
@@ -97,7 +99,7 @@ bool roboticslab::AmorControlboard::getEncoderSpeed(int j, double *sp)
 
     if (amor_get_actual_velocities(handle, &velocities) != AMOR_SUCCESS)
     {
-        yError("amor_get_actual_velocities() failed: %s", amor_error());
+        yCError(AMOR, "amor_get_actual_velocities() failed: %s", amor_error());
         return false;
     }
 
@@ -110,13 +112,13 @@ bool roboticslab::AmorControlboard::getEncoderSpeed(int j, double *sp)
 
 bool roboticslab::AmorControlboard::getEncoderSpeeds(double *spds)
 {
-    yTrace("");
+    yCTrace(AMOR, "");
 
     AMOR_VECTOR7 velocities;
 
     if (amor_get_actual_velocities(handle, &velocities) != AMOR_SUCCESS)
     {
-        yError("amor_get_actual_velocities() failed: %s", amor_error());
+        yCError(AMOR, "amor_get_actual_velocities() failed: %s", amor_error());
         return false;
     }
 
@@ -132,7 +134,7 @@ bool roboticslab::AmorControlboard::getEncoderSpeeds(double *spds)
 
 bool roboticslab::AmorControlboard::getEncoderAcceleration(int j, double *spds)
 {
-    //yError("getEncoderAcceleration() not available");
+    //yCError(AMOR, "getEncoderAcceleration() not available");
     return false;
 }
 
@@ -140,7 +142,7 @@ bool roboticslab::AmorControlboard::getEncoderAcceleration(int j, double *spds)
 
 bool roboticslab::AmorControlboard::getEncoderAccelerations(double *accs)
 {
-    //yError("getEncoderAccelerations() not available");
+    //yCError(AMOR, "getEncoderAccelerations() not available");
     return false;
 }
 
@@ -148,7 +150,7 @@ bool roboticslab::AmorControlboard::getEncoderAccelerations(double *accs)
 
 bool roboticslab::AmorControlboard::getEncodersTimed(double *encs, double *time)
 {
-    yTrace("");
+    yCTrace(AMOR, "");
     double now = yarp::os::Time::now();
     std::fill_n(time, AMOR_NUM_JOINTS, now);
     return getEncoders(encs);
@@ -158,7 +160,7 @@ bool roboticslab::AmorControlboard::getEncodersTimed(double *encs, double *time)
 
 bool roboticslab::AmorControlboard::getEncoderTimed(int j, double *encs, double *time)
 {
-    yTrace("%d", j);
+    yCTrace(AMOR, "%d", j);
     *time = yarp::os::Time::now();
     return getEncoder(j, encs);
 }

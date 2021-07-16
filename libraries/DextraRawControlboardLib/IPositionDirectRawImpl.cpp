@@ -4,13 +4,15 @@
 
 #include <yarp/os/Log.h>
 
+#include "LogComponent.hpp"
+
 using namespace roboticslab;
 
 // ----------------------------------------------------------------------------------------
 
 bool DextraRawControlboard::setPositionRaw(int j, double ref)
 {
-    yTrace("%d %f", j, ref);
+    yCTrace(DEXTRA, "%d %f", j, ref);
     return positionMoveRaw(j, ref);
 }
 

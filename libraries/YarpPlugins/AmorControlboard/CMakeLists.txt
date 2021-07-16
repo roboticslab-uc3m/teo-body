@@ -24,7 +24,9 @@ if(NOT SKIP_AmorControlboard)
                                      ICurrentControlImpl.cpp
                                      IEncodersImpl.cpp
                                      IPositionControlImpl.cpp
-                                     IVelocityControlImpl.cpp)
+                                     IVelocityControlImpl.cpp
+                                     LogComponent.hpp
+                                     LogComponent.cpp)
 
     target_link_libraries(AmorControlboard YARP::YARP_os
                                            YARP::YARP_dev

@@ -4,11 +4,13 @@
 
 #include <yarp/os/Log.h>
 
+#include "LogComponent.hpp"
+
 // ------------------ IVelocityControl related ----------------------------------------
 
 bool roboticslab::AmorControlboard::velocityMove(int j, double sp)
 {
-    yTrace("%d %f", j, sp);
+    yCTrace(AMOR, "%d %f", j, sp);
 
     if (!indexWithinRange(j))
     {
@@ -19,7 +21,7 @@ bool roboticslab::AmorControlboard::velocityMove(int j, double sp)
 
     if (amor_get_actual_velocities(handle, &velocities) != AMOR_SUCCESS)
     {
-        yError("amor_get_actual_velocities() failed: %s", amor_error());
+        yCError(AMOR, "amor_get_actual_velocities() failed: %s", amor_error());
         return false;
     }
 
@@ -46,7 +48,7 @@ bool roboticslab::AmorControlboard::velocityMove(const double *sp)
 
 bool roboticslab::AmorControlboard::velocityMove(const int n_joint, const int *joints, const double *spds)
 {
-    yTrace("%d", n_joint);
+    yCTrace(AMOR, "%d", n_joint);
 
     if (!batchWithinRange(n_joint))
     {
@@ -57,7 +59,7 @@ bool roboticslab::AmorControlboard::velocityMove(const int n_joint, const int *j
 
     if (n_joint < AMOR_NUM_JOINTS && amor_get_actual_velocities(handle, &velocities) != AMOR_SUCCESS)
     {
-        yError("amor_get_actual_velocities() failed: %s", amor_error());
+        yCError(AMOR, "amor_get_actual_velocities() failed: %s", amor_error());
         return false;
     }
 
@@ -73,7 +75,7 @@ bool roboticslab::AmorControlboard::velocityMove(const int n_joint, const int *j
 
 bool roboticslab::AmorControlboard::getRefVelocity(const int joint, double *vel)
 {
-    yTrace("%d", joint);
+    yCTrace(AMOR, "%d", joint);
 
     if (!indexWithinRange(joint))
     {
@@ -84,7 +86,7 @@ bool roboticslab::AmorControlboard::getRefVelocity(const int joint, double *vel)
 
     if (amor_get_req_velocities(handle, &velocities) != AMOR_SUCCESS)
     {
-        yError("amor_get_req_velocities() failed: %s", amor_error());
+        yCError(AMOR, "amor_get_req_velocities() failed: %s", amor_error());
         return false;
     }
 
@@ -97,13 +99,13 @@ bool roboticslab::AmorControlboard::getRefVelocity(const int joint, double *vel)
 
 bool roboticslab::AmorControlboard::getRefVelocities(double *vels)
 {
-    yTrace("");
+    yCTrace(AMOR, "");
 
     AMOR_VECTOR7 velocities;
 
     if (amor_get_req_velocities(handle, &velocities) != AMOR_SUCCESS)
     {
-        yError("amor_get_req_velocities() failed: %s", amor_error());
+        yCError(AMOR, "amor_get_req_velocities() failed: %s", amor_error());
         return false;
     }
 
@@ -119,7 +121,7 @@ bool roboticslab::AmorControlboard::getRefVelocities(double *vels)
 
 bool roboticslab::AmorControlboard::getRefVelocities(const int n_joint, const int *joints, double *vels)
 {
-    yTrace("%d", n_joint);
+    yCTrace(AMOR, "%d", n_joint);
 
     if (!batchWithinRange(n_joint))
     {
@@ -130,7 +132,7 @@ bool roboticslab::AmorControlboard::getRefVelocities(const int n_joint, const in
 
     if (amor_get_req_velocities(handle, &velocities) != AMOR_SUCCESS)
     {
-        yError("amor_get_req_velocities() failed: %s", amor_error());
+        yCError(AMOR, "amor_get_req_velocities() failed: %s", amor_error());
         return false;
     }
 

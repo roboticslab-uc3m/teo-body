@@ -8,8 +8,11 @@
 #include <string>
 
 #include <yarp/os/Log.h>
+#include <yarp/os/LogComponent.h>
 
 #include "CanUtils.hpp"
+
+YARP_LOG_COMPONENT(SDO, "rl.SdoClient")
 
 using namespace roboticslab;
 
@@ -127,7 +130,7 @@ bool SdoClient::uploadInternal(const std::string & name, void * data, std::uint3
 
     if ((bitsReceived >> 5) != 2 || expectedIndex != index || responseMsg[3] != subindex)
     {
-        yError("SDO client request (\"%s\") overrun (id %d)", name.c_str(), id);
+        yCError(SDO, "SDO client request (\"%s\") overrun (id %d)", name.c_str(), id);
         return false;
     }
 
@@ -140,7 +143,7 @@ bool SdoClient::uploadInternal(const std::string & name, void * data, std::uint3
 
             if (size != actualSize)
             {
-                yError("SDO client request (\"%s\") size mismatch: expected %u, got %u (id %d)", name.c_str(), size, actualSize, id);
+                yCError(SDO, "SDO client request (\"%s\") size mismatch: expected %u, got %u (id %d)", name.c_str(), size, actualSize, id);
                 return false;
             }
         }
@@ -154,11 +157,11 @@ bool SdoClient::uploadInternal(const std::string & name, void * data, std::uint3
 
         if (size < len)
         {
-            yError("SDO segmented upload (\"%s\") insufficient memory allocated: expected %u, got %u (id %d)", name.c_str(), len, size, id);
+            yCError(SDO, "SDO segmented upload (\"%s\") insufficient memory allocated: expected %u, got %u (id %d)", name.c_str(), len, size, id);
             return false;
         }
 
-        yInfo("SDO segmented upload (\"%s\") begin (id %d)", name.c_str(), id);
+        yCInfo(SDO, "SDO segmented upload (\"%s\") begin (id %d)", name.c_str(), id);
 
         std::bitset<8> bitsSent(0x60);
         std::uint8_t segmentedMsg[8] = {0};
@@ -177,13 +180,13 @@ bool SdoClient::uploadInternal(const std::string & name, void * data, std::uint3
 
             if ((bitsReceived >> 5) != 0)
             {
-                yError("SDO segmented upload (\"%s\") overrun (id %d)", name.c_str(), id);
+                yCError(SDO, "SDO segmented upload (\"%s\") overrun (id %d)", name.c_str(), id);
                 return false;
             }
 
             if (bitsReceived[4] != bitsSent[4])
             {
-                yError("SDO segmented upload (\"%s\") toggle bit mismatch (id %d)", name.c_str(), id);
+                yCError(SDO, "SDO segmented upload (\"%s\") toggle bit mismatch (id %d)", name.c_str(), id);
                 return false;
             }
 
@@ -197,7 +200,7 @@ bool SdoClient::uploadInternal(const std::string & name, void * data, std::uint3
         }
         while (!bitsReceived[0]); // continuation bit
 
-        yInfo("SDO segmented upload (\"%s\") end (id %d)", name.c_str(), id);
+        yCInfo(SDO, "SDO segmented upload (\"%s\") end (id %d)", name.c_str(), id);
     }
 
     return true;
@@ -232,7 +235,7 @@ bool SdoClient::downloadInternal(const std::string & name, const void * data, st
 
         if ((bitsReceived >> 5) != 3 || expectedIndex != index || confirmMsg[3] != subindex)
         {
-            yWarning("SDO client indication (\"%s\") overrun (id %d)", name.c_str(), id);
+            yCWarning(SDO, "SDO client indication (\"%s\") overrun (id %d)", name.c_str(), id);
             return false;
         }
     }
@@ -253,14 +256,14 @@ bool SdoClient::downloadInternal(const std::string & name, const void * data, st
 
         if ((bitsReceived >> 5) != 3 || expectedIndex != index || confirmMsg[3] != subindex)
         {
-            yError("SDO client indication (\"%s\") overrun (id %d)", name.c_str(), id);
+            yCError(SDO, "SDO client indication (\"%s\") overrun (id %d)", name.c_str(), id);
             return false;
         }
 
         std::bitset<8> bitsSent(0x00);
         std::uint32_t sent = 0;
 
-        yInfo("SDO segmented download (\"%s\") begin (id %d)", name.c_str(), id);
+        yCInfo(SDO, "SDO segmented download (\"%s\") begin (id %d)", name.c_str(), id);
 
         do
         {
@@ -291,13 +294,13 @@ bool SdoClient::downloadInternal(const std::string & name, const void * data, st
 
             if ((bitsReceived >> 5) != 1)
             {
-                yError("SDO segmented download (\"%s\") overrun (id %d)", name.c_str(), id);
+                yCError(SDO, "SDO segmented download (\"%s\") overrun (id %d)", name.c_str(), id);
                 return false;
             }
 
             if (bitsReceived[4] != bitsSent[4])
             {
-                yError("SDO segmented download (\"%s\") toggle bit mismatch (id %d)", name.c_str(), id);
+                yCError(SDO, "SDO segmented download (\"%s\") toggle bit mismatch (id %d)", name.c_str(), id);
                 return false;
             }
 
@@ -306,7 +309,7 @@ bool SdoClient::downloadInternal(const std::string & name, const void * data, st
         }
         while (!bitsSent[0]); // continuation bit
 
-        yInfo("SDO segmented download (\"%s\") end (id %d)", name.c_str(), id);
+        yCInfo(SDO, "SDO segmented download (\"%s\") end (id %d)", name.c_str(), id);
     }
 
     return true;
@@ -333,17 +336,17 @@ bool SdoClient::download(const std::string & name, const std::string & s, std::u
 
 bool SdoClient::performTransfer(const std::string & name, const std::uint8_t * req, std::uint8_t * resp)
 {
-    yInfo("SDO client transfer (\"%s\") %s", name.c_str(), msgToStr(cobRx, req).c_str());
+    yCInfo(SDO, "SDO client transfer (\"%s\") %s", name.c_str(), msgToStr(cobRx, req).c_str());
 
     if (!send(req))
     {
-        yError("SDO client request/indication (\"%s\") unable to send packet (id %d)", name.c_str(), id);
+        yCError(SDO, "SDO client request/indication (\"%s\") unable to send packet (id %d)", name.c_str(), id);
         return false;
     }
 
     if (!stateObserver.await(resp))
     {
-        yError("SDO client request/indication (\"%s\") inactive/timeout (id %d)", name.c_str(), id);
+        yCError(SDO, "SDO client request/indication (\"%s\") inactive/timeout (id %d)", name.c_str(), id);
         return false;
     }
 
@@ -351,10 +354,10 @@ bool SdoClient::performTransfer(const std::string & name, const std::uint8_t * r
     {
         std::uint32_t code;
         std::memcpy(&code, resp + 4, sizeof(code));
-        yError("SDO transfer abort (\"%s\"): %s (id %d)", name.c_str(), parseAbortCode(code).c_str(), id);
+        yCError(SDO, "SDO transfer abort (\"%s\"): %s (id %d)", name.c_str(), parseAbortCode(code).c_str(), id);
         return false;
     }
 
-    yInfo("SDO server transfer (\"%s\") %s", name.c_str(), msgToStr(cobTx, resp).c_str());
+    yCInfo(SDO, "SDO server transfer (\"%s\") %s", name.c_str(), msgToStr(cobTx, resp).c_str());
     return true;
 }

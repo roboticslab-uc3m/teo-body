@@ -4,11 +4,13 @@
 
 #include <yarp/os/Log.h>
 
+#include "LogComponent.hpp"
+
 // ------------------- IControlLimits related ------------------------------------
 
 bool roboticslab::AmorControlboard::setLimits(int axis, double min, double max)
 {
-    yError("setLimits() not available");
+    yCError(AMOR, "setLimits() not available");
     return false;
 }
 
@@ -16,7 +18,7 @@ bool roboticslab::AmorControlboard::setLimits(int axis, double min, double max)
 
 bool roboticslab::AmorControlboard::getLimits(int axis, double *min, double *max)
 {
-    yTrace("%d", axis);
+    yCTrace(AMOR, "%d", axis);
 
     if (!indexWithinRange(axis))
     {
@@ -27,7 +29,7 @@ bool roboticslab::AmorControlboard::getLimits(int axis, double *min, double *max
 
     if (amor_get_joint_info(handle, axis, &parameters) != AMOR_SUCCESS)
     {
-        yError("amor_get_joint_info() failed: %s", amor_error());
+        yCError(AMOR, "amor_get_joint_info() failed: %s", amor_error());
         return false;
     }
 
@@ -41,7 +43,7 @@ bool roboticslab::AmorControlboard::getLimits(int axis, double *min, double *max
 
 bool roboticslab::AmorControlboard::setVelLimits(int axis, double min, double max)
 {
-    yError("setVelLimits() not available");
+    yCError(AMOR, "setVelLimits() not available");
     return false;
 }
 
@@ -49,7 +51,7 @@ bool roboticslab::AmorControlboard::setVelLimits(int axis, double min, double ma
 
 bool roboticslab::AmorControlboard::getVelLimits(int axis, double *min, double *max)
 {
-    yTrace("%d", axis);
+    yCTrace(AMOR, "%d", axis);
 
     if (!indexWithinRange(axis))
     {
@@ -60,7 +62,7 @@ bool roboticslab::AmorControlboard::getVelLimits(int axis, double *min, double *
 
     if (amor_get_joint_info(handle, axis, &parameters) != AMOR_SUCCESS)
     {
-        yError("amor_get_joint_info() failed: %s", amor_error());
+        yCError(AMOR, "amor_get_joint_info() failed: %s", amor_error());
         return false;
     }
 

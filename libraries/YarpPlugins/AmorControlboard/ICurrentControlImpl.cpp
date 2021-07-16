@@ -6,6 +6,8 @@
 
 #include <yarp/os/Log.h>
 
+#include "LogComponent.hpp"
+
 // ------------------ ICurrentControl Related -----------------------------------------
 
 bool roboticslab::AmorControlboard::getNumberOfMotors(int *ax)
@@ -17,7 +19,7 @@ bool roboticslab::AmorControlboard::getNumberOfMotors(int *ax)
 
 bool roboticslab::AmorControlboard::getCurrent(int m, double *curr)
 {
-    yTrace("%d", m);
+    yCTrace(AMOR, "%d", m);
 
     if (!indexWithinRange(m))
     {
@@ -28,7 +30,7 @@ bool roboticslab::AmorControlboard::getCurrent(int m, double *curr)
 
     if (amor_get_actual_currents(handle, &currents) != AMOR_SUCCESS)
     {
-        yError("amor_get_actual_currents() failed: %s", amor_error());
+        yCError(AMOR, "amor_get_actual_currents() failed: %s", amor_error());
         return false;
     }
 
@@ -41,13 +43,13 @@ bool roboticslab::AmorControlboard::getCurrent(int m, double *curr)
 
 bool roboticslab::AmorControlboard::getCurrents(double *currs)
 {
-    yTrace("");
+    yCTrace(AMOR, "");
 
     AMOR_VECTOR7 currents;
 
     if (amor_get_actual_currents(handle, &currents) != AMOR_SUCCESS)
     {
-        yError("amor_get_actual_currents() failed: %s", amor_error());
+        yCError(AMOR, "amor_get_actual_currents() failed: %s", amor_error());
         return false;
     }
 
@@ -60,7 +62,7 @@ bool roboticslab::AmorControlboard::getCurrents(double *currs)
 
 bool roboticslab::AmorControlboard::getCurrentRange(int m, double *min, double *max)
 {
-    yTrace("%d", m);
+    yCTrace(AMOR, "%d", m);
 
     if (!indexWithinRange(m))
     {
@@ -71,7 +73,7 @@ bool roboticslab::AmorControlboard::getCurrentRange(int m, double *min, double *
 
     if (amor_get_joint_info(handle, m, &parameters) != AMOR_SUCCESS)
     {
-        yError("amor_get_joint_info() failed: %s", amor_error());
+        yCError(AMOR, "amor_get_joint_info() failed: %s", amor_error());
         return false;
     }
 
@@ -85,7 +87,7 @@ bool roboticslab::AmorControlboard::getCurrentRange(int m, double *min, double *
 
 bool roboticslab::AmorControlboard::getCurrentRanges(double *min, double *max)
 {
-    yTrace("");
+    yCTrace(AMOR, "");
 
     bool ok = true;
 
@@ -101,7 +103,7 @@ bool roboticslab::AmorControlboard::getCurrentRanges(double *min, double *max)
 
 bool roboticslab::AmorControlboard::setRefCurrents(const double *currs)
 {
-    yTrace("");
+    yCTrace(AMOR, "");
 
     AMOR_VECTOR7 currents;
 
@@ -109,7 +111,7 @@ bool roboticslab::AmorControlboard::setRefCurrents(const double *currs)
 
     if (amor_set_currents(handle, currents) != AMOR_SUCCESS)
     {
-        yError("amor_set_currents() failed: %s", amor_error());
+        yCError(AMOR, "amor_set_currents() failed: %s", amor_error());
         return false;
     }
 
@@ -120,7 +122,7 @@ bool roboticslab::AmorControlboard::setRefCurrents(const double *currs)
 
 bool roboticslab::AmorControlboard::setRefCurrent(int m, double curr)
 {
-    yTrace("%d", m);
+    yCTrace(AMOR, "%d", m);
 
     if (!indexWithinRange(m))
     {
@@ -131,7 +133,7 @@ bool roboticslab::AmorControlboard::setRefCurrent(int m, double curr)
 
     if (amor_get_actual_currents(handle, &currents) != AMOR_SUCCESS)
     {
-        yError("amor_get_actual_currents() failed: %s", amor_error());
+        yCError(AMOR, "amor_get_actual_currents() failed: %s", amor_error());
         return false;
     }
 
@@ -139,7 +141,7 @@ bool roboticslab::AmorControlboard::setRefCurrent(int m, double curr)
 
     if (amor_set_currents(handle, currents) != AMOR_SUCCESS)
     {
-        yError("amor_set_currents() failed: %s", amor_error());
+        yCError(AMOR, "amor_set_currents() failed: %s", amor_error());
         return false;
     }
 
@@ -150,13 +152,13 @@ bool roboticslab::AmorControlboard::setRefCurrent(int m, double curr)
 
 bool roboticslab::AmorControlboard::setRefCurrents(const int n_motor, const int *motors, const double *currs)
 {
-    yTrace("%d", n_motor);
+    yCTrace(AMOR, "%d", n_motor);
 
     AMOR_VECTOR7 currents;
 
     if (amor_get_actual_currents(handle, &currents) != AMOR_SUCCESS)
     {
-        yError("amor_get_actual_currents() failed: %s", amor_error());
+        yCError(AMOR, "amor_get_actual_currents() failed: %s", amor_error());
         return false;
     }
 
@@ -167,7 +169,7 @@ bool roboticslab::AmorControlboard::setRefCurrents(const int n_motor, const int 
 
     if (amor_set_currents(handle, currents) != AMOR_SUCCESS)
     {
-        yError("amor_set_currents() failed: %s", amor_error());
+        yCError(AMOR, "amor_set_currents() failed: %s", amor_error());
         return false;
     }
 
@@ -178,13 +180,13 @@ bool roboticslab::AmorControlboard::setRefCurrents(const int n_motor, const int 
 
 bool roboticslab::AmorControlboard::getRefCurrents(double *currs)
 {
-    yTrace("");
+    yCTrace(AMOR, "");
 
     AMOR_VECTOR7 currents;
 
     if (amor_get_req_currents(handle, &currents) != AMOR_SUCCESS)
     {
-        yError("amor_get_req_currents() failed: %s", amor_error());
+        yCError(AMOR, "amor_get_req_currents() failed: %s", amor_error());
         return false;
     }
 
@@ -197,7 +199,7 @@ bool roboticslab::AmorControlboard::getRefCurrents(double *currs)
 
 bool roboticslab::AmorControlboard::getRefCurrent(int m, double *curr)
 {
-    yTrace("%d", m);
+    yCTrace(AMOR, "%d", m);
 
     if (!indexWithinRange(m))
     {
@@ -208,7 +210,7 @@ bool roboticslab::AmorControlboard::getRefCurrent(int m, double *curr)
 
     if (amor_get_req_currents(handle, &currents) != AMOR_SUCCESS)
     {
-        yError("amor_get_req_currents() failed: %s", amor_error());
+        yCError(AMOR, "amor_get_req_currents() failed: %s", amor_error());
         return false;
     }
 

@@ -4,11 +4,13 @@
 
 #include <yarp/os/Log.h>
 
+#include "LogComponent.hpp"
+
 // ------------------- IAxisInfo related ------------------------------------
 
 bool roboticslab::AmorControlboard::getAxisName(int axis, std::string& name)
 {
-    yTrace("%d", axis);
+    yCTrace(AMOR, "%d", axis);
 
     if (!indexWithinRange(axis))
     {
@@ -39,7 +41,7 @@ bool roboticslab::AmorControlboard::getAxisName(int axis, std::string& name)
             name = "A6";
             break;
         default:
-            yError("Unrecognized axis: %d", axis);
+            yCError(AMOR, "Unrecognized axis: %d", axis);
             return false;
     }
 
@@ -50,7 +52,7 @@ bool roboticslab::AmorControlboard::getAxisName(int axis, std::string& name)
 
 bool roboticslab::AmorControlboard::getJointType(int axis, yarp::dev::JointTypeEnum& type)
 {
-    yTrace("%d", axis);
+    yCTrace(AMOR, "%d", axis);
 
     if (!indexWithinRange(axis))
     {

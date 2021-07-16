@@ -9,7 +9,9 @@ if(ENABLE_DextraRawControlboardLib)
                                                 IControlModeRawImpl.cpp
                                                 IEncodersRawImpl.cpp
                                                 IPositionControlRawImpl.cpp
-                                                IPositionDirectRawImpl.cpp)
+                                                IPositionDirectRawImpl.cpp
+                                                LogComponent.hpp
+                                                LogComponent.cpp)
 
     target_link_libraries(DextraRawControlboardLib PUBLIC YARP::YARP_dev
                                                    PRIVATE YARP::YARP_os)

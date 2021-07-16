@@ -7,13 +7,15 @@
 #include <yarp/os/Log.h>
 #include <yarp/os/Time.h>
 
+#include "LogComponent.hpp"
+
 using namespace roboticslab;
 
 // ------------------------------------------------------------------------------
 
 bool DextraRawControlboard::resetEncoderRaw(int j)
 {
-    yTrace("%d", j);
+    yCTrace(DEXTRA, "%d", j);
     return setEncoderRaw(j, 0.0);
 }
 
@@ -21,7 +23,7 @@ bool DextraRawControlboard::resetEncoderRaw(int j)
 
 bool DextraRawControlboard::resetEncodersRaw()
 {
-    yTrace("");
+    yCTrace(DEXTRA, "");
     Synapse::Setpoints setpoints = {0};
     setSetpoints(setpoints);
     return true;
@@ -31,7 +33,7 @@ bool DextraRawControlboard::resetEncodersRaw()
 
 bool DextraRawControlboard::setEncoderRaw(int j, double val)
 {
-    yTrace("%d %f", j, val);
+    yCTrace(DEXTRA, "%d %f", j, val);
     CHECK_JOINT(j);
     setSetpoint(j, val);
     return true;
@@ -41,7 +43,7 @@ bool DextraRawControlboard::setEncoderRaw(int j, double val)
 
 bool DextraRawControlboard::setEncodersRaw(const double * vals)
 {
-    yTrace("");
+    yCTrace(DEXTRA, "");
     Synapse::Setpoints setpoints;
     std::copy(vals, vals + Synapse::DATA_POINTS, std::begin(setpoints));
     setSetpoints(setpoints);
@@ -52,7 +54,7 @@ bool DextraRawControlboard::setEncodersRaw(const double * vals)
 
 bool DextraRawControlboard::getEncoderRaw(int j, double * v)
 {
-    yTrace("%d", j);
+    yCTrace(DEXTRA, "%d", j);
     CHECK_JOINT(j);
     *v = getSetpoint(j);
     return true;
